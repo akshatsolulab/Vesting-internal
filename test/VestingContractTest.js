@@ -711,35 +711,35 @@ describe("Vesting Token Tests", function () {
         });
 
 
-        it("Should Release correct token amount for Company reserve", async () => {
-            //above function added beneficiary to 0 role
-            await TransferTokensAllocateTokensAddBeneficiary();
+        // it("Should Release correct token amount for Company reserve", async () => {
+        //     //above function added beneficiary to 0 role
+        //     await TransferTokensAllocateTokensAddBeneficiary();
 
-            //second address added as a beneficiary with role 0 ,cliff = 2 months ,duration = 24 months,TGE = 0
-            //Amount for vesting is 1000
-            //So after cliff period and 1st interval (interval 1 month)
-            //contract should release 1000 / 24 (months) tokens (duration 24 months)
-            const tokenReleasedForCompanyReserve = Math.floor(amount / 24);
+        //     //second address added as a beneficiary with role 0 ,cliff = 2 months ,duration = 24 months,TGE = 0
+        //     //Amount for vesting is 1000
+        //     //So after cliff period and 1st interval (interval 1 month)
+        //     //contract should release 1000 / 24 (months) tokens (duration 24 months)
+        //     const tokenReleasedForCompanyReserve = Math.floor(amount / 24);
 
-            //increase block time
-            await ethers.provider.send("evm_increaseTime", [
-                cliffs[0] + intervals[0],
-            ]);
-            await ethers.provider.send("evm_mine");
+        //     //increase block time
+        //     await ethers.provider.send("evm_increaseTime", [
+        //         cliffs[0] + intervals[0],
+        //     ]);
+        //     await ethers.provider.send("evm_mine");
 
-            const tx = await VestingContract.connect(deployer).release(
-                secondAccount.address,
-                0
-            );
-            const allEvents = (await tx.wait()).events;
-            const tokenReleasedEvent = allEvents.find(
-                (el) => el.event === "TokenReleased"
-            );
-            const [Beneficiary, tokenReleased, totalTokenWithdrawable] =
-                tokenReleasedEvent.args;
+        //     const tx = await VestingContract.connect(deployer).release(
+        //         secondAccount.address,
+        //         0
+        //     );
+        //     const allEvents = (await tx.wait()).events;
+        //     const tokenReleasedEvent = allEvents.find(
+        //         (el) => el.event === "TokenReleased"
+        //     );
+        //     const [Beneficiary, tokenReleased, totalTokenWithdrawable] =
+        //         tokenReleasedEvent.args;
 
-            expect(tokenReleased).be.equal(tokenReleasedForCompanyReserve);
-        });
+        //     expect(tokenReleased).be.equal(tokenReleasedForCompanyReserve);
+        // });
 
         it("Should release correct token amount for Exchange listings & liquidity", async () => {
             //above function added beneficiary to 0 role
@@ -829,49 +829,49 @@ describe("Vesting Token Tests", function () {
             expect(tokenReleased).be.equal(tokenReleasedForAIROrBURN);
         });
 
-        it("Should release correct token amount for Partnerships And Advisors ", async () => {
-            //above function added beneficiary to 0 role
-            await TransferTokensAllocateTokensAddBeneficiary();
+        // it("Should release correct token amount for Partnerships And Advisors ", async () => {
+        //     //above function added beneficiary to 0 role
+        //     await TransferTokensAllocateTokensAddBeneficiary();
 
-            //add a beneficiary for AIR/BURN  (role 7).
-            // For role 7 , TGE = 0 , Cliff = 1 month , duration = 14 months , interval = 3 months
-            await VestingContract.addBeneficiary(
-                secondAccount.address,
-                7,
-                amount,
-                cliffs[7],
-                durations[7],
-                intervals[7],
-                isRevokable
-            );
-
-
-            //Amount for vesting is 1000
-            //So after cliff period and 1st interval (3 month)
-            //contract should release ((1000 ) / 14 (months) ) tokens per month
-            //as the interval is 3 so amount * 3 will be released  after first interval
+        //     //add a beneficiary for AIR/BURN  (role 7).
+        //     // For role 7 , TGE = 0 , Cliff = 1 month , duration = 14 months , interval = 3 months
+        //     await VestingContract.addBeneficiary(
+        //         secondAccount.address,
+        //         7,
+        //         amount,
+        //         cliffs[7],
+        //         durations[7],
+        //         intervals[7],
+        //         isRevokable
+        //     );
 
 
-            const tokenReleasedForPartnershipAndAdvisors = Math.floor((amount * 3) / 14); //as interval is 3
+        //     //Amount for vesting is 1000
+        //     //So after cliff period and 1st interval (3 month)
+        //     //contract should release ((1000 ) / 14 (months) ) tokens per month
+        //     //as the interval is 3 so amount * 3 will be released  after first interval
 
-            //increase block time
-            await ethers.provider.send("evm_increaseTime", [
-                cliffs[7] + intervals[7],
-            ]);
-            await ethers.provider.send("evm_mine");
 
-            const tx = await VestingContract.connect(deployer).release(
-                secondAccount.address,
-                7
-            );
-            const allEvents = (await tx.wait()).events;
-            const tokenReleasedEvent = allEvents.find(
-                (el) => el.event === "TokenReleased"
-            );
-            const [Beneficiary, tokenReleased, totalTokenWithdrawable] =
-                tokenReleasedEvent.args;
+        //     const tokenReleasedForPartnershipAndAdvisors = Math.floor((amount * 3) / 14); //as interval is 3
 
-            expect(tokenReleased).be.equal(tokenReleasedForPartnershipAndAdvisors);
-        });
+        //     //increase block time
+        //     await ethers.provider.send("evm_increaseTime", [
+        //         cliffs[7] + intervals[7],
+        //     ]);
+        //     await ethers.provider.send("evm_mine");
+
+        //     const tx = await VestingContract.connect(deployer).release(
+        //         secondAccount.address,
+        //         7
+        //     );
+        //     const allEvents = (await tx.wait()).events;
+        //     const tokenReleasedEvent = allEvents.find(
+        //         (el) => el.event === "TokenReleased"
+        //     );
+        //     const [Beneficiary, tokenReleased, totalTokenWithdrawable] =
+        //         tokenReleasedEvent.args;
+
+        //     expect(tokenReleased).be.equal(tokenReleasedForPartnershipAndAdvisors);
+        // });
     });
 });

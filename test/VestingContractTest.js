@@ -1,6 +1,7 @@
 // const { inputToConfig } = require("@ethereum-waffle/compiler");
 const chai = require("chai");
 const { solidity } = require("ethereum-waffle");
+const { BigNumber } = require("ethers");
 chai.use(solidity);
 const expect = chai.expect;
 const { ethers } = require("hardhat");
@@ -465,7 +466,7 @@ describe("Vesting Token Tests", function () {
                 interval,
                 isRevokable
             );
-            const tgeAmount1 = (1000 * tges[1]) / 100;
+            const tgeAmount1 = ethers.BigNumber.from((1000 * tges[1]) / 100 * 10 ** 18);
             await VestingContract.connect(secondAccount).withdraw(secondAccount.address, 1, tgeAmount1);
             expect(await ERC20TokenContract.balanceOf(secondAccount.address)).to.be.equal(tgeAmount1);
         });
